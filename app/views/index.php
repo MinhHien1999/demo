@@ -55,7 +55,7 @@
                                     <p>ADD TO CART</p>
                                 </button>
                                 
-                                <!-- <button class="shop-item-button inactive dathem" id="button-inactive-<?php echo $value['id']?>">
+                                <!-- <button class="shop-item-button inactive" id="button-inactive-<?php echo $value['id']?>">
                                     <div class="shop-item-button-cover">
                                         <div class="shop-item-button-cover-check-icon">
                                             <img src="app/assets/img/check.png" alt="" style="height: 27px;width: 25px;transform: translate(-16%,3%) rotate(46deg);">
@@ -148,7 +148,6 @@
                 id, image, name, price, color, quantity
             }
             if(!document.getElementById("cart-items")){
-                console.log("không");
                 var htmlItems = '<div class="cart-items" id="cart-items"></div>';
                 $(document).find('div#card-body-cart').html(htmlItems);
             }
@@ -158,16 +157,15 @@
                 data : data,
                 dataType: 'json',
                 success : function(reponse) {
-                    console.log(reponse);
-                    console.log(reponse.image);
+                    // console.log(reponse);
                     // $(document).find('button#add-to-cart'+id).remove();
-                    var html = '<button class="shop-item-button inactive" id="button-inactive-<?php echo $value['id']?>">'+
-                                    '<div class="shop-item-button-cover">'+
-                                        '<div class="shop-item-button-cover-check-icon">'+
-                                            '<img src="app/assets/img/check.png" alt="" style="height: 27px;width: 25px;transform: translate(-16%,3%) rotate(46deg);">'+
-                                        '</div>'+
-                                    '</div>'+
-                                '</button>';
+                    // var html = '<button class="shop-item-button inactive" id="button-inactive-<?php echo $value['id']?>">'+
+                    //                 '<div class="shop-item-button-cover">'+
+                    //                     '<div class="shop-item-button-cover-check-icon">'+
+                    //                         '<img src="app/assets/img/check.png" alt="" style="height: 27px;width: 25px;transform: translate(-16%,3%) rotate(46deg);">'+
+                    //                     '</div>'+
+                    //                 '</div>'+
+                    //             '</button>';
                     var item =  '<div class="cart-item" id="cart-item-'+reponse.id+'">'+
                                     '<div class="cart-item-left">'+
                                         '<div class="cart-item-image">'+
@@ -178,7 +176,7 @@
                                     '</div>'+
                                     '<div class="cart-item-right">'+
                                         '<div class="cart-item-name">'+reponse.name+'</div>'+
-                                        '<div class="cart-item-price" id="cart-item-price-'+reponse.id+'" data="'+reponse.price+'" value="'+reponse.price+'">'+reponse.price+'</div>'+
+                                        '<div class="cart-item-price" id="cart-item-price-'+reponse.id+'" data="'+reponse.price+'" value="'+reponse.price+'">$'+reponse.price+'</div>'+
                                         '<div class="cart-item-actions">'+
                                             '<div class="cart-item-count">'+
                                                 '<button class="cart-item-count-button quantity-left-minus" id="quantity-left-'+reponse.id+'" data-id="'+reponse.id+'">-</button>'+
@@ -192,8 +190,6 @@
                                     '</div>'+
                                 '</div>';
                     $(document).find('div#cart-items').html(item);
-                    $(document).find('div#shop-item-bottom'+id).html(html);
-                    $('#add-to-cart'+id).remove();
                 }
             });
         }
@@ -211,6 +207,13 @@
                     // console.log(reponse);
                     $('#cart-item-'+idItem).remove();
                     $(document).find('span#amount').html("$"+reponse.amount);
+                    // var add =  '<div class="shop-item-price" id="price-'+idItem+'" val="'+reponse.price+'">$'+reponse.price+'</div>'+
+                    //                     '<button onclick="addCart('+idItem+')" class="shop-item-button add-to-cart" id="add-to-cart-'+idItem+'">'+
+                    //                             '<p>ADD TO CART</p>'+
+                    //                     '</button>'+
+                    //                 '</div>';
+                    // $('#button-inactive-'+id).remove();
+                    // $('#shop-item-bottom-'+id).html(add);
                     if(reponse.amount == 0){
                         var html = '<div class="cart-empty"><div class="cart-empty-text">'+reponse.html+'.</div></div>';
                         $(document).find('div#card-body-cart').html(html);
@@ -224,11 +227,6 @@
             // var quantity = 2;
             var price = $('#cart-item-price-'+ id).attr('value');
             var quantity = oldValue - 1;
-            // if(oldValue == 1){
-            //     var quantity = oldValue + 1;
-            //     // $(document).find('div#quantity-number-'+id).setAttribute('value', oldValue);
-            //     $(document).find('div#quantity-number-'+id).innerHTML = quantity;
-            // }
             var data = {
                 id, quantity, price
             }
@@ -240,6 +238,13 @@
                 success: function(reponse){
                     if(quantity == 0){
                         $('div#cart-item-'+id).remove();
+                        $('#button-inactive-'+id).remove();
+                        var button =  '<div class="shop-item-price" id="price-'+id+'" val="'+price+'">$'+price+'</div>'+
+                                            '<button onclick="addCart('+id+')" class="shop-item-button add-to-cart" id="add-to-cart-'+id+'">'+
+                                                    '<p>ADD TO CART</p>'+
+                                            '</button>'+
+                                        '</div>';
+                        $('#shop-item-bottom-'+id).html(button);
                         $(document).find('#amount').html("$"+ parseFloat(reponse.amount).toFixed(2));
                         $('span#amount').attr('value', parseFloat(reponse.amount).toFixed(2));
                         $('div#quantity-number-'+id).attr('value', reponse.quantity);
@@ -255,7 +260,7 @@
                         $(document).find('div#quantity-number-'+id).html(reponse.quantity);
                         $('div#quantity-number-'+id).attr('value', reponse.quantity);
                     }
-                    console.log(reponse);
+                    // console.log(button);
                 }
             })
         })
